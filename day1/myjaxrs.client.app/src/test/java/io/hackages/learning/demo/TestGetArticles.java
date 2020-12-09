@@ -11,15 +11,22 @@ import java.net.URISyntaxException;
 
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 public class TestGetArticles {
 
+	@BeforeTest
+	public void setUp () {
+		RestAssured.baseURI = "http://localhost:8080/myjaxrs.server.app/webapi";
+	}
+
 	@Test
 	public void testMyResource() throws URISyntaxException {
-		URI uri = new URI("http://localhost:8080/myjaxrs.server.app/webapi/myresource");
+		URI uri = new URI("/myresource");
 		given()
 				.accept(ContentType.TEXT)
 				.when()
@@ -34,7 +41,7 @@ public class TestGetArticles {
 
 	@Test
 	public void testGetArticles() throws URISyntaxException {
-		URI uri = new URI("http://localhost:8080/myjaxrs.server.app/webapi/articles");
+		URI uri = new URI("/articles");
 		given()
 				.accept(ContentType.XML)
 				.when()
@@ -44,19 +51,6 @@ public class TestGetArticles {
 				.statusCode(HttpStatus.SC_OK)
 				.and()
 				.body("articles.article.size()", is(2))
-		;
-	}
-
-	@Test
-	public void testGetArticles2() throws URISyntaxException {
-		URI uri = new URI("http://localhost:8080/myjaxrs.server.app/webapi/articles");
-		given()
-				.accept(ContentType.XML)
-				.when()
-				.get(uri)
-				.then()
-				.assertThat()
-				.statusCode(HttpStatus.SC_OK)
 				.and()
 				.body("articles.article.body", hasItem(is("Hello world")))
 				.and()
