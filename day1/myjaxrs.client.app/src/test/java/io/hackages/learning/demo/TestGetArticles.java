@@ -8,6 +8,10 @@ import static org.hamcrest.Matchers.is;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
@@ -16,6 +20,7 @@ import org.testng.annotations.Test;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 public class TestGetArticles {
 
@@ -42,19 +47,70 @@ public class TestGetArticles {
 	@Test
 	public void testGetArticles() throws URISyntaxException {
 		URI uri = new URI("/articles");
-		given()
-				.accept(ContentType.XML)
+		Response response = given()
+				.accept(ContentType.JSON)
 				.when()
-				.get(uri)
+				.get(uri);
+
+		System.out.println(response.body().prettyPrint());
+
+		response
 				.then()
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("articles.article.size()", is(2))
+				.body("size()", is(2))
 				.and()
-				.body("articles.article.body", hasItem(is("Hello world")))
+				.body("body", hasItem(is("Hello world")))
 				.and()
-				.body("articles.article.body", hasItem(is("Hello Jersey")))
+				.body("body", hasItem(is("Hello Jersey")))
 		;
+	}
+
+	@Test
+	public void testPostArticle(){
+
+		given()
+				.accept(ContentType.JSON)
+				.and()
+				.contentType(ContentType.JSON)
+				.and()
+				.request()
+				.body("{\n" +
+					  "  \"body\": \"Renaud says Hello\"\n" +
+					  "}")
+				.when()
+				.post("/articles")
+				.then()
+				.statusCode(HttpStatus.SC_NOT_ACCEPTABLE);
+
+		Response post = given()
+				.accept(ContentType.TEXT)
+				.and()
+				.contentType(ContentType.JSON)
+				.and()
+				.request()
+				.body("{\n" +
+					  "  \"body\": \"Renaud says Hello\"\n" +
+					  "}")
+				.when()
+				.post("/articles");
+
+		// Print response
+
+		post.then()
+			.statusCode(200)
+			.and()
+			.body(is("article added"));
+
+		/*
+		given()
+				.accept(ContentType.JSON)
+				.when()
+				.get("/articles")
+				.then()
+				.body("size()", is(3));
+*/
+
 	}
 }
