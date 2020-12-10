@@ -1,4 +1,4 @@
-# Day 1 : REST WebServices  
+# Day 1 : REST WebServices Workshop 
 
 ## Instructions for solving the exercises 
 
@@ -15,6 +15,7 @@
 * [A fake Online API](https://jsonplaceholder.typicode.com/)
 * [RESTAssured Usage](https://github.com/rest-assured/rest-assured/wiki/Usage)
 * [An article on TDD](http://www.agiledata.org/essays/tdd.html)
+* [Resources Naming Best Practices](https://restfulapi.net/resource-naming/)
 
 ## Exercises 
 
@@ -62,5 +63,8 @@ The goal will be to create from scratch a REST API like [this](https://myfakeapi
 ### Add Filtering and Pagination 
 
 * Update the resource that fetches the articles with query parameters `offset`, `limit` and `year`
+```java
+@QueryParam("offset") int offset
+```
 
 ### Refactoring 
