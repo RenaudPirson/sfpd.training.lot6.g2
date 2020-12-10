@@ -1,4 +1,4 @@
-# Day 1 : REST WebServices  
+# Day 1 : REST WebServices Workshop 
 
 ## Instructions for solving the exercises 
 
@@ -63,5 +63,8 @@ Example : `http://localhost:8080/jaxrs.server.app.jersey.sample/webapi/myresourc
 ### Add Filtering and Pagination 
 
 * Update the resource that fetches the articles with query parameters `offset`, `limit` and `year`
+```java
+@QueryParam("offset") int offset
+```
 
 ### Refactoring 
