@@ -1,6 +1,8 @@
 package be.sfpd.rest.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -12,6 +14,8 @@ public class Article {
     private LocalDate createdDate;
 
     private String body;
+
+    private List<Comment> comments = new ArrayList<>();
 
     public Article() {
     }
@@ -45,4 +49,9 @@ public class Article {
     public void setBody(String body) {
         this.body = body;
     }
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
 }

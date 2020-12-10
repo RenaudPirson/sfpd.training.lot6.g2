@@ -223,6 +223,71 @@ public class TestArticlResource {
 				.body("size()", equalTo(1))
 		;
 	}
+
+	@Test
+	public void testGetArticleComments(){
+		Response response = given()
+				.accept(ContentType.JSON)
+				.when()
+				.get("/articles/1/comments");
+
+		response.body().prettyPrint();
+
+		response
+				.then()
+				.assertThat()
+				.statusCode(HttpStatus.SC_OK)
+				.and()
+				.body("size()", equalTo(2))
+		;
+	}
+
+	@Test
+	public void testGetArticleCommentsEmpty(){
+		Response response = given()
+				.accept(ContentType.JSON)
+				.when()
+				.get("/articles/2/comments");
+
+		response.body().prettyPrint();
+
+		response
+				.then()
+				.assertThat()
+				.statusCode(HttpStatus.SC_OK)
+				.and()
+				.body("size()", equalTo(0))
+		;
+	}
+
+	@Test
+	public void testAddArticleComment(){
+		Response response = given()
+				.accept(ContentType.JSON)
+				.contentType(ContentType.JSON)
+				.and()
+				.request()
+				.body("{\n" +
+					  "  \"text\": \"Delivered on time\"\n" +
+					  "}")
+				.when()
+				.post("/articles/3/comments");
+
+		response.body().prettyPrint();
+
+		response
+				.then()
+				.assertThat()
+				.statusCode(HttpStatus.SC_OK)
+				.and()
+				.body("text", equalTo("Delivered on time"));
+
+		Response articleResponse = given()
+				.accept(ContentType.JSON)
+				.get("/articles/3");
+
+		articleResponse.body().prettyPrint();
+	}
 	//
 	//@Test
 	//public void testDelete(){

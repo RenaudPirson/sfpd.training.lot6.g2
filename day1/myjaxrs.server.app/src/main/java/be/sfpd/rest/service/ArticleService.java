@@ -1,17 +1,22 @@
 package be.sfpd.rest.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import be.sfpd.rest.model.Comment;
 import be.sfpd.rest.repository.MockDatabase;
 import be.sfpd.rest.model.Article;
 
 public class ArticleService {
 
     private Map<Long, Article> articles = MockDatabase.getArticles();
+    private static Long commentId = 1l;
+
+    private static final ArticleService instance = new ArticleService();
 
     public ArticleService() {
         Article article1 = new Article(1L, LocalDate.now(), "Hello world");
@@ -20,6 +25,9 @@ public class ArticleService {
         addArticle(article1);
 		addArticle(article2);
 		addArticle(article3);
+
+		commentArticle(article1, new Comment("I like this article : 8/10"));
+		commentArticle(article1, new Comment("I hate this article : 2/10"));
     }
 
     public List<Article> getArticles() {
@@ -47,4 +55,15 @@ public class ArticleService {
     public Article removeArticle(Long id) {
         return articles.remove(id);
     }
+
+    public Article commentArticle(Article article, Comment comment){
+    	comment.setId(commentId++);
+    	comment.setCreationDate(LocalDateTime.now());
+    	article.getComments().add(comment);
+    	return updateArticle(article);
+	}
+
+	public static ArticleService getInstance(){
+    	return instance;
+	}
 }

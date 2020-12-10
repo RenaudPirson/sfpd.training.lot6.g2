@@ -23,7 +23,7 @@ import be.sfpd.rest.service.ArticleService;
 @Path("articles")
 public class ArticleResource {
 
-    static ArticleService service = new ArticleService();
+    static ArticleService service = ArticleService.getInstance();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
