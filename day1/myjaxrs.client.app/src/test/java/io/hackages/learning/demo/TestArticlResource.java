@@ -22,7 +22,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-public class TestGetArticles {
+public class TestArticlResource {
 
 	@BeforeTest
 	public void setUp () {
@@ -112,5 +112,57 @@ public class TestGetArticles {
 				.body("size()", is(3));
 */
 
+	}
+
+	@Test
+	public void testPut(){
+		Response put = given()
+				.accept(ContentType.TEXT)
+				.and()
+				.contentType(ContentType.JSON)
+				.and()
+				.request()
+				.body("{\n" +
+					  "  \"body\": \"Renaud says Hello modified\"\n" +
+					  "}")
+				.when()
+				.put("/articles/2");
+
+		// Print response
+
+		put.then()
+				.statusCode(200)
+				.and()
+				.body(is("article modified"));
+
+		given()
+				.accept(ContentType.JSON)
+				.when()
+				.get("/articles/2")
+				.then()
+				.body("body", is("Renaud says Hello modified"));
+	}
+
+	@Test
+	public void testDelete(){
+		Response delete = given()
+				.accept(ContentType.TEXT)
+				.and()
+				.request()
+				.when()
+				.delete("/articles/1");
+
+		// Print response
+
+		delete.then()
+				.statusCode(200)
+				.and()
+				.body(is("article deleted"));
+
+		given()
+				.when()
+				.get("/articles/1")
+				.then()
+				.body("", Matchers.nullValue());
 	}
 }
