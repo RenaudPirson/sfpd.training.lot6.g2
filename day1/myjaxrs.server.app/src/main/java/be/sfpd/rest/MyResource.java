@@ -1,4 +1,4 @@
-package be.sfpd.blog;
+package be.sfpd.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

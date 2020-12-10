@@ -1,7 +1,7 @@
-package be.sfpd.blog.resource;
+package be.sfpd.rest.resource;
 
-import be.sfpd.blog.model.Profile;
-import be.sfpd.blog.service.ProfileService;
+import be.sfpd.rest.model.Profile;
+import be.sfpd.rest.service.ProfileService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

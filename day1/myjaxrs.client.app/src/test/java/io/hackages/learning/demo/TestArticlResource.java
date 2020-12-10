@@ -59,11 +59,13 @@ public class TestArticlResource {
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", is(2))
+				.body("size()", is(3))
 				.and()
 				.body("body", hasItem(is("Hello world")))
 				.and()
 				.body("body", hasItem(is("Hello Jersey")))
+				.and()
+				.body("body", hasItem(is("Hello New York")))
 		;
 	}
 
@@ -144,25 +146,104 @@ public class TestArticlResource {
 	}
 
 	@Test
-	public void testDelete(){
-		Response delete = given()
-				.accept(ContentType.TEXT)
-				.and()
-				.request()
+	public void testFilter_offset1_limit1(){
+		Response response = given()
+				.param("offset", 1)
+				.param("limit", 1)
+				.accept(ContentType.JSON)
 				.when()
-				.delete("/articles/1");
+				.get("/articles");
 
-		// Print response
+		response.body().prettyPrint();
 
-		delete.then()
-				.statusCode(200)
-				.and()
-				.body(is("article deleted"));
-
-		given()
-				.when()
-				.get("/articles/1")
+		response
 				.then()
-				.body("", Matchers.nullValue());
+				.assertThat()
+				.statusCode(HttpStatus.SC_OK)
+				.and()
+				.body("size()", equalTo(1))
+				.and()
+				.body("id", hasItem(is(2)))
+		;
 	}
+
+	@Test
+	public void testFilter_offset1_nolimit(){
+		Response response = given()
+				.param("offset", 1)
+				.accept(ContentType.JSON)
+				.when()
+				.get("/articles");
+
+		response.body().prettyPrint();
+
+		response
+				.then()
+				.assertThat()
+				.statusCode(HttpStatus.SC_OK)
+				.and()
+				.body("size()", equalTo(2))
+		;
+	}
+
+	@Test
+	public void testFilter_year_2020(){
+		Response response = given()
+				.param("year", 2020)
+				.accept(ContentType.JSON)
+				.when()
+				.get("/articles");
+
+		response.body().prettyPrint();
+
+		response
+				.then()
+				.assertThat()
+				.statusCode(HttpStatus.SC_OK)
+				.and()
+				.body("size()", equalTo(2))
+		;
+	}
+
+	@Test
+	public void testFilter_year_2000(){
+		Response response = given()
+				.param("year", 2000)
+				.accept(ContentType.JSON)
+				.when()
+				.get("/articles");
+
+		response.body().prettyPrint();
+
+		response
+				.then()
+				.assertThat()
+				.statusCode(HttpStatus.SC_OK)
+				.and()
+				.body("size()", equalTo(1))
+		;
+	}
+	//
+	//@Test
+	//public void testDelete(){
+	//	Response delete = given()
+	//			.accept(ContentType.TEXT)
+	//			.and()
+	//			.request()
+	//			.when()
+	//			.delete("/articles/1");
+	//
+	//	// Print response
+	//
+	//	delete.then()
+	//			.statusCode(200)
+	//			.and()
+	//			.body(is("article deleted"));
+	//
+	//	given()
+	//			.when()
+	//			.get("/articles/1")
+	//			.then()
+	//			.body("", Matchers.nullValue());
+	//}
 }

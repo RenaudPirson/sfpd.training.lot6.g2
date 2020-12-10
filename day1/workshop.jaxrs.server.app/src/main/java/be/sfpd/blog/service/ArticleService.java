@@ -1,7 +1,7 @@
-package be.sfpd.blog.service;
+package be.sfpd.rest.service;
 
-import be.sfpd.blog.model.Article;
-import be.sfpd.blog.repository.MockDatabase;
+import be.sfpd.rest.model.Article;
+import be.sfpd.rest.repository.MockDatabase;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;

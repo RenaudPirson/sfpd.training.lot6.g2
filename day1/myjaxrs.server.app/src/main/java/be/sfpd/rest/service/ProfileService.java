@@ -1,12 +1,12 @@
-package be.sfpd.blog.service;
+package be.sfpd.rest.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-import be.sfpd.blog.model.Profile;
-import be.sfpd.blog.repository.MockDatabase;
+import be.sfpd.rest.model.Profile;
+import be.sfpd.rest.repository.MockDatabase;
 
 public class ProfileService {
 	static Map<Long, Profile> data =  MockDatabase.getProfiles();

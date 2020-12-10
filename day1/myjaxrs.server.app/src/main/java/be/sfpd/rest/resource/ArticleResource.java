@@ -1,8 +1,12 @@
-package be.sfpd.blog.resource;
+package be.sfpd.rest.resource;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,8 +17,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import be.sfpd.blog.model.Article;
-import be.sfpd.blog.service.ArticleService;
+import be.sfpd.rest.model.Article;
+import be.sfpd.rest.service.ArticleService;
 
 @Path("articles")
 public class ArticleResource {
@@ -23,9 +27,21 @@ public class ArticleResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Article> getAllArticle() {
-        return service.getArticles();
-    }
+    public List<Article> getAllArticle(@BeanParam ArticleBeanParam articleBeanParam) {
+
+		List<Article> articles = service.getArticles();
+		Stream<Article> articleStream = articles.stream().sorted(Comparator.comparing(Article::getId))
+				.skip( articleBeanParam.getOffset() );
+		if(articleBeanParam.getLimit() != null){
+			articleStream = articleStream.limit(articleBeanParam.getLimit());
+		}
+
+		if(articleBeanParam.getYear() != null){
+			articleStream = articleStream.filter(article -> article.getCreatedDate().getYear() == articleBeanParam.getYear().intValue());
+		}
+
+		return articleStream.collect(Collectors.toList());
+	}
 
     @GET
     @Path("/{id}")

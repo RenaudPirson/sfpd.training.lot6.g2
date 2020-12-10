@@ -1,4 +1,4 @@
-package be.sfpd.blog.service;
+package be.sfpd.rest.service;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import be.sfpd.blog.model.Article;
-import be.sfpd.blog.repository.MockDatabase;
+import be.sfpd.rest.repository.MockDatabase;
+import be.sfpd.rest.model.Article;
 
 public class ArticleService {
 
@@ -16,8 +16,10 @@ public class ArticleService {
     public ArticleService() {
         Article article1 = new Article(1L, LocalDate.now(), "Hello world");
         Article article2 = new Article(2L, LocalDate.now(), "Hello Jersey");
-        articles.put(1L, article1);
-        articles.put(2L, article2);
+		Article article3 = new Article(3L, LocalDate.of(2000,1,1), "Hello New York");
+        addArticle(article1);
+		addArticle(article2);
+		addArticle(article3);
     }
 
     public List<Article> getArticles() {

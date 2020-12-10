@@ -1,7 +1,7 @@
-package be.sfpd.blog.repository;
+package be.sfpd.rest.repository;
 
-import be.sfpd.blog.model.Article;
-import be.sfpd.blog.model.Profile;
+import be.sfpd.rest.model.Article;
+import be.sfpd.rest.model.Profile;
 
 import java.util.HashMap;
 import java.util.Map;

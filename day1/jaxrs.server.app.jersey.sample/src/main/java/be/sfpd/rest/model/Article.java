@@ -1,4 +1,4 @@
-package be.sfpd.blog.model;
+package be.sfpd.rest.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
