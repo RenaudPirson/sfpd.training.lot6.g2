@@ -5,10 +5,12 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import be.sfpd.rest.model.Article;
 import be.sfpd.rest.model.Comment;
@@ -35,6 +37,19 @@ public class CommentResource {
 		return comment;
 	}
 
-	//@GET
-	//@Path("/{commentId}")
+	@GET
+	@Path("/{commentId}")
+	public Response getComment(@PathParam("articleId")Long articleId, @PathParam("commentId") Long commentId){
+		return service.getCommentOfArticle(articleId, commentId)
+				.map(Response::ok)
+				.orElse(Response.noContent())
+				.build();
+	}
+
+	@PUT
+	@Path("/{commentId}")
+	public Response updateComment(@PathParam("articleId")Long articleId, @PathParam("commentId") Long commentId, Comment comment){
+		Comment updated = service.updateCommentOfArticle(articleId, commentId, comment);
+		return Response.ok(updated).build();
+	}
 }

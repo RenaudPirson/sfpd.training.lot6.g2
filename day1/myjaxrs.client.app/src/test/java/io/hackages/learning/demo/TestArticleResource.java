@@ -9,24 +9,47 @@ import static org.hamcrest.Matchers.is;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-public class TestArticlResource {
+public class TestArticleResource {
 
 	@BeforeTest
 	public void setUp () {
 		RestAssured.baseURI = "http://localhost:8080/myjaxrs.server.app/webapi";
+	}
+
+	@BeforeMethod
+	public void resetDb() {
+
+		given()
+				.accept(ContentType.JSON)
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/admin/resetDB");
+		getDefaultArticles().forEach(this::insertArticle);
+
+	}
+
+	private void insertArticle(String article){
+		Response post = given()
+				.contentType(ContentType.JSON)
+				.body(article).when().post("/articles");
+		post.prettyPrint();
 	}
 
 	@Test
@@ -46,6 +69,7 @@ public class TestArticlResource {
 
 	@Test
 	public void testGetArticles() throws URISyntaxException {
+
 		URI uri = new URI("/articles");
 		Response response = given()
 				.accept(ContentType.JSON)
@@ -72,22 +96,8 @@ public class TestArticlResource {
 	@Test
 	public void testPostArticle(){
 
-		given()
-				.accept(ContentType.JSON)
-				.and()
-				.contentType(ContentType.JSON)
-				.and()
-				.request()
-				.body("{\n" +
-					  "  \"body\": \"Renaud says Hello\"\n" +
-					  "}")
-				.when()
-				.post("/articles")
-				.then()
-				.statusCode(HttpStatus.SC_NOT_ACCEPTABLE);
-
 		Response post = given()
-				.accept(ContentType.TEXT)
+				.accept(ContentType.JSON)
 				.and()
 				.contentType(ContentType.JSON)
 				.and()
@@ -103,23 +113,15 @@ public class TestArticlResource {
 		post.then()
 			.statusCode(200)
 			.and()
-			.body(is("article added"));
+			.body("body", is("Renaud says Hello"));
 
-		/*
-		given()
-				.accept(ContentType.JSON)
-				.when()
-				.get("/articles")
-				.then()
-				.body("size()", is(3));
-*/
 
 	}
 
 	@Test
 	public void testPut(){
 		Response put = given()
-				.accept(ContentType.TEXT)
+				.accept(ContentType.JSON)
 				.and()
 				.contentType(ContentType.JSON)
 				.and()
@@ -201,7 +203,7 @@ public class TestArticlResource {
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", equalTo(2))
+				.body("size()", equalTo(3))
 		;
 	}
 
@@ -220,95 +222,42 @@ public class TestArticlResource {
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", equalTo(1))
-		;
-	}
-
-	@Test
-	public void testGetArticleComments(){
-		Response response = given()
-				.accept(ContentType.JSON)
-				.when()
-				.get("/articles/1/comments");
-
-		response.body().prettyPrint();
-
-		response
-				.then()
-				.assertThat()
-				.statusCode(HttpStatus.SC_OK)
-				.and()
-				.body("size()", equalTo(2))
-		;
-	}
-
-	@Test
-	public void testGetArticleCommentsEmpty(){
-		Response response = given()
-				.accept(ContentType.JSON)
-				.when()
-				.get("/articles/2/comments");
-
-		response.body().prettyPrint();
-
-		response
-				.then()
-				.assertThat()
-				.statusCode(HttpStatus.SC_OK)
-				.and()
 				.body("size()", equalTo(0))
 		;
 	}
 
 	@Test
-	public void testAddArticleComment(){
-		Response response = given()
+	public void testGetArticleNoContent(){
+		given()
 				.accept(ContentType.JSON)
-				.contentType(ContentType.JSON)
-				.and()
-				.request()
-				.body("{\n" +
-					  "  \"text\": \"Delivered on time\"\n" +
-					  "}")
 				.when()
-				.post("/articles/3/comments");
-
-		response.body().prettyPrint();
-
-		response
+				.get("articles/500")
 				.then()
-				.assertThat()
-				.statusCode(HttpStatus.SC_OK)
-				.and()
-				.body("text", equalTo("Delivered on time"));
-
-		Response articleResponse = given()
-				.accept(ContentType.JSON)
-				.get("/articles/3");
-
-		articleResponse.body().prettyPrint();
+				.statusCode(HttpStatus.SC_NO_CONTENT);
 	}
-	//
-	//@Test
-	//public void testDelete(){
-	//	Response delete = given()
-	//			.accept(ContentType.TEXT)
-	//			.and()
-	//			.request()
-	//			.when()
-	//			.delete("/articles/1");
-	//
-	//	// Print response
-	//
-	//	delete.then()
-	//			.statusCode(200)
-	//			.and()
-	//			.body(is("article deleted"));
-	//
-	//	given()
-	//			.when()
-	//			.get("/articles/1")
-	//			.then()
-	//			.body("", Matchers.nullValue());
-	//}
+
+
+
+	public List<String> getDefaultArticles() {
+		return Arrays.asList(
+				"{\n" +
+							 "      \"body\": \"Hello world\",\n" +
+							 "      \"comments\":       [\n" +
+							 "                  {\n" +
+							 "            			\"text\": \"I like this article : 8/10\"\n" +
+							 "         			},\n" +
+							 "                  {\n" +
+							 "            			\"text\": \"I hate this article : 2/10\"\n" +
+							 "         			}\n" +
+							 "      ]\n" +
+							 "   }",
+				"{\n" +
+							 "      \"body\": \"Hello Jersey\"\n" +
+							 "   }",
+				"{\n" +
+							 "      \"body\": \"Hello New York\"\n" +
+							 "   }"
+		);
+	}
+
 }

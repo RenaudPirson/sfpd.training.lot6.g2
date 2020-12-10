@@ -22,4 +22,9 @@ public class MockDatabase {
     public static Map<Long, Profile> getProfiles(){
     	return profiles;
 	}
+
+	public static void resetDB(){
+    	articles.clear();
+    	profiles.clear();
+	}
 }

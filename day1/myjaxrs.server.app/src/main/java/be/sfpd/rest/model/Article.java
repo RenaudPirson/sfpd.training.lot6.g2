@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -15,6 +16,7 @@ public class Article {
 
     private String body;
 
+    @JsonbProperty("comments")
     private List<Comment> comments = new ArrayList<>();
 
     public Article() {

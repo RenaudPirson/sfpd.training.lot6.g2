@@ -19,15 +19,15 @@ public class ArticleService {
     private static final ArticleService instance = new ArticleService();
 
     public ArticleService() {
-        Article article1 = new Article(1L, LocalDate.now(), "Hello world");
-        Article article2 = new Article(2L, LocalDate.now(), "Hello Jersey");
-		Article article3 = new Article(3L, LocalDate.of(2000,1,1), "Hello New York");
-        addArticle(article1);
-		addArticle(article2);
-		addArticle(article3);
-
-		commentArticle(article1, new Comment("I like this article : 8/10"));
-		commentArticle(article1, new Comment("I hate this article : 2/10"));
+        //Article article1 = new Article(1L, LocalDate.now(), "Hello world");
+        //Article article2 = new Article(2L, LocalDate.now(), "Hello Jersey");
+		//Article article3 = new Article(3L, LocalDate.of(2000,1,1), "Hello New York");
+        //addArticle(article1);
+		//addArticle(article2);
+		//addArticle(article3);
+		//
+		//commentArticle(article1, new Comment("I like this article : 8/10"));
+		//commentArticle(article1, new Comment("I hate this article : 2/10"));
     }
 
     public List<Article> getArticles() {
@@ -53,6 +53,9 @@ public class ArticleService {
     }
 
     public Article removeArticle(Long id) {
+    	if(getArticleById(id) == null){
+    		throw new IllegalIdException(id);
+		}
         return articles.remove(id);
     }
 
@@ -65,5 +68,24 @@ public class ArticleService {
 
 	public static ArticleService getInstance(){
     	return instance;
+	}
+
+	public Optional<Comment> getCommentOfArticle(Long articleId, Long commentId) {
+    	return getArticleById(articleId)
+				.flatMap(a -> a.getComments().stream()
+					.filter(c -> c.getId() == commentId)
+					 .findFirst()
+				);
+
+
+
+	}
+
+	public Comment updateCommentOfArticle(Long articleId, Long commentId, Comment comment) {
+		Comment toUpdate = getCommentOfArticle(articleId, commentId)
+				.orElseThrow(() -> new IllegalIdException(commentId));
+		toUpdate.setText(comment.getText());
+		return toUpdate;
+
 	}
 }

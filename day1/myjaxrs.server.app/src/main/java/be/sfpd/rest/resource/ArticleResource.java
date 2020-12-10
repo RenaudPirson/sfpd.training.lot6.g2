@@ -16,18 +16,19 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import be.sfpd.rest.model.Article;
 import be.sfpd.rest.service.ArticleService;
 
 @Path("articles")
+@Produces(MediaType.APPLICATION_JSON)
 public class ArticleResource {
 
     static ArticleService service = ArticleService.getInstance();
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Article> getAllArticle(@BeanParam ArticleBeanParam articleBeanParam) {
+    public Response getAllArticle(@BeanParam ArticleBeanParam articleBeanParam) {
 
 		List<Article> articles = service.getArticles();
 		Stream<Article> articleStream = articles.stream().sorted(Comparator.comparing(Article::getId))
@@ -40,29 +41,32 @@ public class ArticleResource {
 			articleStream = articleStream.filter(article -> article.getCreatedDate().getYear() == articleBeanParam.getYear().intValue());
 		}
 
-		return articleStream.collect(Collectors.toList());
+		List<Article> filteredArticles = articleStream.collect(Collectors.toList());
+
+		return Response.ok(filteredArticles)
+				.build();
 	}
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Article getArticleById(@PathParam("id") Long articleId) {
-        return service.getArticleById(articleId).orElse(null);
+    public Response getArticleById(@PathParam("id") Long articleId) {
+        return service.getArticleById(articleId)
+				.map(Response::ok)
+				.orElse(Response.noContent())
+				.build();
     }
 
     @POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.TEXT_PLAIN)
-	public String addArticle(Article article){
+	public Response addArticle(Article article){
     	article.setCreatedDate(LocalDate.now());
     	service.addArticle(article);
-		return "article added";
+		return Response.ok(article).build();
 	}
 
 	@PUT
 	@Path("/{id}")
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.TEXT_PLAIN)
 	public String editArticle(@PathParam("id")long id, Article newArticle){
 		Article article = service.getArticleById(id)
 				.orElseThrow(() ->new IllegalArgumentException("Article with id " + id + " does not exist"));
@@ -73,10 +77,10 @@ public class ArticleResource {
 
 	@DELETE
 	@Path("/{id}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteArticle(@PathParam("id")long id){
-    	service.removeArticle(id);
-    	return "article deleted";
+	public Response deleteArticle(@PathParam("id")long id){
+
+		Article article = service.removeArticle(id);
+		return Response.ok(article).build();
 	}
 
 
