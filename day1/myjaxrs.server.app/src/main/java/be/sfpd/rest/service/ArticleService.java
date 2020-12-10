@@ -1,20 +1,21 @@
 package be.sfpd.blog.service;
 
-import be.sfpd.blog.model.Article;
-import be.sfpd.blog.repository.MockDatabase;
-
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import be.sfpd.blog.model.Article;
+import be.sfpd.blog.repository.MockDatabase;
 
 public class ArticleService {
 
     private Map<Long, Article> articles = MockDatabase.getArticles();
 
     public ArticleService() {
-        Article article1 = new Article(1L, new Date(), "Hello world");
-        Article article2 = new Article(2L, new Date(), "Hello Jersey");
+        Article article1 = new Article(1L, LocalDate.now(), "Hello world");
+        Article article2 = new Article(2L, LocalDate.now(), "Hello Jersey");
         articles.put(1L, article1);
         articles.put(2L, article2);
     }
@@ -23,8 +24,8 @@ public class ArticleService {
         return articles.values().stream().collect(Collectors.toList());
     }
 
-    public Article getArticleById(Long id) {
-        return MockDatabase.getArticleById(id);
+    public Optional<Article> getArticleById(Long id) {
+        return Optional.ofNullable(articles.get(id));
     }
 
     public Article addArticle(Article article) {
