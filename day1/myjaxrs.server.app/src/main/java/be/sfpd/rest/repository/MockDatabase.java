@@ -10,6 +10,8 @@ public class MockDatabase {
 
     public static Map<Long, Article> articles = new HashMap<>();
     public static Map<Long, Profile> profiles = new HashMap<>();
+	private static Long COMMENT_SEQUENCE = 1l;
+	private static Long ARTICLE_SEQUENCE = 1l;
 
     public static Map<Long, Article> getArticles() {
         return articles;
@@ -26,5 +28,15 @@ public class MockDatabase {
 	public static void resetDB(){
     	articles.clear();
     	profiles.clear();
+		COMMENT_SEQUENCE = 1l;
+		ARTICLE_SEQUENCE = 1l;
+	}
+
+	public static Long getNewCommentId(){
+    	return COMMENT_SEQUENCE ++;
+	}
+
+	public static Long getNewArticleId(){
+    	return ARTICLE_SEQUENCE ++;
 	}
 }

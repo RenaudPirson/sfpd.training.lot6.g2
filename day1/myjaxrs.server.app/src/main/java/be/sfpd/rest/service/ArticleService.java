@@ -14,7 +14,6 @@ import be.sfpd.rest.model.Article;
 public class ArticleService {
 
     private Map<Long, Article> articles = MockDatabase.getArticles();
-    private static Long commentId = 1l;
 
     private static final ArticleService instance = new ArticleService();
 
@@ -39,7 +38,7 @@ public class ArticleService {
     }
 
     public Article addArticle(Article article) {
-        article.setId((long) (articles.size() + 1));
+        article.setId(MockDatabase.getNewArticleId());
         articles.put(article.getId(), article);
         return article;
     }
@@ -60,7 +59,7 @@ public class ArticleService {
     }
 
     public Article commentArticle(Article article, Comment comment){
-    	comment.setId(commentId++);
+    	comment.setId(MockDatabase.getNewCommentId());
     	comment.setCreationDate(LocalDateTime.now());
     	article.getComments().add(comment);
     	return updateArticle(article);
