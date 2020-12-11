@@ -3,6 +3,7 @@ package be.sfpd.rest.resource;
 import be.sfpd.rest.model.Profile;
 import be.sfpd.rest.service.ProfileService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -14,6 +15,7 @@ public class ProfilesResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("trainer")
     public List<Profile> getAllProfiles() {
         return profileService.getProfiles();
     }
