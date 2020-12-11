@@ -1,6 +1,5 @@
 package be.sfpd.rest.resource;
 
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +18,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import be.sfpd.rest.model.Article;
+import be.sfpd.rest.resource.dto.ArticleListResponse;
+import be.sfpd.rest.resource.dto.ArticleRequest;
+import be.sfpd.rest.resource.dto.ArticleResponse;
 import be.sfpd.rest.service.ArticleService;
 import be.sfpd.rest.service.IllegalIdException;
 
@@ -31,7 +33,8 @@ public class ArticleResource {
     @GET
     public Response getAllArticle(@BeanParam ArticleBeanParam articleBeanParam) {
 
-		List<Article> articles = service.getArticles();
+
+    	List<Article> articles = service.getArticles();
 		Stream<Article> articleStream = articles.stream().sorted(Comparator.comparing(Article::getId))
 				.skip( articleBeanParam.getOffset() );
 		if(articleBeanParam.getLimit() != null){
@@ -44,7 +47,8 @@ public class ArticleResource {
 
 		List<Article> filteredArticles = articleStream.collect(Collectors.toList());
 
-		return Response.ok(filteredArticles)
+		return Response
+				.ok(new ArticleListResponse(filteredArticles))
 				.build();
 	}
 
@@ -52,6 +56,7 @@ public class ArticleResource {
     @Path("/{id}")
     public Response getArticleById(@PathParam("id") Long articleId) {
         return service.getArticleById(articleId)
+				.map(ArticleResponse::new)
 				.map(Response::ok)
 				.orElse(Response.noContent())
 				.build();
@@ -59,20 +64,21 @@ public class ArticleResource {
 
     @POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addArticle(Article article){
-    	article.setCreatedDate(LocalDate.now());
-    	service.addArticle(article);
-		return Response.ok(article).build();
+	public Response addArticle(ArticleRequest articleRequest){
+		Article article = service.addArticle(articleRequest);
+		return Response.ok(new ArticleResponse(article)).build();
 	}
 
 	@PUT
 	@Path("/{id}")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public String editArticle(@PathParam("id")long id, Article newArticle){
+	public Response editArticle(@PathParam("id")long id, ArticleRequest articleRequest){
 		Article article = service.getArticleById(id).orElseThrow(() -> new IllegalIdException(id));
-		article.setBody(newArticle.getBody());
-		service.updateArticle(article);
-		return "article modified";
+		article.setBody(articleRequest.getBody());
+		article = service.updateArticle(article);
+		return Response
+				.ok(new ArticleResponse(article))
+				.build();
 	}
 
 	@DELETE
@@ -80,7 +86,7 @@ public class ArticleResource {
 	public Response deleteArticle(@PathParam("id")long id){
 
 		Article article = service.removeArticle(id);
-		return Response.ok(article).build();
+		return Response.ok(new ArticleResponse(article)).build();
 	}
 
 

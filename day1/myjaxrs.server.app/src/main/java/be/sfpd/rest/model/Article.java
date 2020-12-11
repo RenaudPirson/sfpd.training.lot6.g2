@@ -1,6 +1,6 @@
 package be.sfpd.rest.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class Article {
 
     private Long id;
 
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     private String body;
 
@@ -22,7 +22,7 @@ public class Article {
     public Article() {
     }
 
-    public Article(Long id, LocalDate createdDate, String body) {
+    public Article(Long id, LocalDateTime createdDate, String body) {
         this.id = id;
         this.createdDate = createdDate;
         this.body = body;
@@ -36,11 +36,11 @@ public class Article {
         this.id = id;
     }
 
-    public LocalDate getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 

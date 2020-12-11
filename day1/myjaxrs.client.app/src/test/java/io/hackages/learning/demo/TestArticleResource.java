@@ -42,20 +42,20 @@ public class TestArticleResource extends AbstractArticleTest{
 				.when()
 				.get(uri);
 
-		System.out.println(response.body().prettyPrint());
+		response.body().prettyPrint();
 
 		response
 				.then()
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", is(3))
+				.body("articles.size()", is(3))
 				.and()
-				.body("body", hasItem(is("Hello world")))
+				.body("articles.body", hasItem(is("Hello world")))
 				.and()
-				.body("body", hasItem(is("Hello Jersey")))
+				.body("articles.body", hasItem(is("Hello Jersey")))
 				.and()
-				.body("body", hasItem(is("Hello New York")))
+				.body("articles.body", hasItem(is("Hello New York")))
 		;
 	}
 
@@ -79,7 +79,7 @@ public class TestArticleResource extends AbstractArticleTest{
 		post.then()
 			.statusCode(200)
 			.and()
-			.body("body", is("Renaud says Hello"));
+			.body("article.body", is("Renaud says Hello"));
 
 
 	}
@@ -99,19 +99,19 @@ public class TestArticleResource extends AbstractArticleTest{
 				.when()
 				.put("/articles/2");
 
-		// Print response
+		put.prettyPrint();
 
 		put.then()
 				.statusCode(200)
 				.and()
-				.body(is("article modified"));
+				.body("article.body", is("Renaud says Hello modified"));
 
 		given()
 				.accept(ContentType.JSON)
 				.when()
 				.get("/articles/2")
 				.then()
-				.body("body", is("Renaud says Hello modified"));
+				.body("article.body", is("Renaud says Hello modified"));
 	}
 
 	@Test
@@ -130,9 +130,9 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", equalTo(1))
+				.body("articles.size()", equalTo(1))
 				.and()
-				.body("id", hasItem(is(2)))
+				.body("articles.id", hasItem(is(2)))
 		;
 	}
 
@@ -151,7 +151,7 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", equalTo(2))
+				.body("articles.size()", equalTo(2))
 		;
 	}
 
@@ -170,7 +170,7 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", equalTo(3))
+				.body("articles.size()", equalTo(3))
 		;
 	}
 
@@ -189,7 +189,7 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("size()", equalTo(0))
+				.body("articles.size()", equalTo(0))
 		;
 	}
 

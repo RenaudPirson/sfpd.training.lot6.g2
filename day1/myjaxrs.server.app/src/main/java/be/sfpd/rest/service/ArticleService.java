@@ -1,6 +1,5 @@
 package be.sfpd.rest.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.stream.Collectors;
 import be.sfpd.rest.model.Comment;
 import be.sfpd.rest.repository.MockDatabase;
 import be.sfpd.rest.model.Article;
+import be.sfpd.rest.resource.dto.ArticleRequest;
 
 public class ArticleService {
 
@@ -37,7 +37,10 @@ public class ArticleService {
         return Optional.ofNullable(articles.get(id));
     }
 
-    public Article addArticle(Article article) {
+    public Article addArticle(ArticleRequest articleRequest) {
+    	Article article = new Article();
+    	article.setBody(articleRequest.getBody());
+    	article.setCreatedDate(articleRequest.getTimestamp());
         article.setId(MockDatabase.getNewArticleId());
         articles.put(article.getId(), article);
         return article;
@@ -51,7 +54,7 @@ public class ArticleService {
         return article;
     }
 
-    public Article removeArticle(Long id) throws IllegalIdException {
+    public Article removeArticle(Long id) {
     	if(getArticleById(id) == null){
     		throw new IllegalIdException(id);
 		}
@@ -62,7 +65,7 @@ public class ArticleService {
     	comment.setId(MockDatabase.getNewCommentId());
     	comment.setCreationDate(LocalDateTime.now());
     	article.getComments().add(comment);
-    	return updateArticle(article);
+    	return article;
 	}
 
 	public static ArticleService getInstance(){
