@@ -14,9 +14,7 @@ import org.testng.annotations.Test;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-public class TestArticleResource extends AbstractArticleTest{
-
-
+public class TestArticleResource extends SetDataForEndToEndTests {
 
 	@Test
 	public void testMyResource() throws URISyntaxException {
@@ -49,13 +47,13 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("articles.size()", is(3))
+				.body("items.size()", is(3))
 				.and()
-				.body("articles.body", hasItem(is("Hello world")))
+				.body("items.body", hasItem(is("Hello world")))
 				.and()
-				.body("articles.body", hasItem(is("Hello Jersey")))
+				.body("items.body", hasItem(is("Hello Jersey")))
 				.and()
-				.body("articles.body", hasItem(is("Hello New York")))
+				.body("items.body", hasItem(is("Hello New York")))
 		;
 	}
 
@@ -80,7 +78,6 @@ public class TestArticleResource extends AbstractArticleTest{
 			.statusCode(200)
 			.and()
 			.body("article.body", is("Renaud says Hello"));
-
 
 	}
 
@@ -130,9 +127,9 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("articles.size()", equalTo(1))
+				.body("items.size()", equalTo(1))
 				.and()
-				.body("articles.id", hasItem(is(2)))
+				.body("items.id", hasItem(is(2)))
 		;
 	}
 
@@ -151,7 +148,7 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("articles.size()", equalTo(2))
+				.body("items.size()", equalTo(2))
 		;
 	}
 
@@ -170,7 +167,7 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("articles.size()", equalTo(3))
+				.body("items.size()", equalTo(3))
 		;
 	}
 
@@ -189,7 +186,7 @@ public class TestArticleResource extends AbstractArticleTest{
 				.assertThat()
 				.statusCode(HttpStatus.SC_OK)
 				.and()
-				.body("articles.size()", equalTo(0))
+				.body("items.size()", equalTo(0))
 		;
 	}
 

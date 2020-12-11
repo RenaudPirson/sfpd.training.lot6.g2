@@ -18,9 +18,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import be.sfpd.rest.model.Article;
-import be.sfpd.rest.resource.dto.ArticleListResponse;
 import be.sfpd.rest.resource.dto.ArticleRequest;
-import be.sfpd.rest.resource.dto.ArticleResponse;
+import be.sfpd.rest.resource.dto.ItemResponse;
+import be.sfpd.rest.resource.dto.ItemListResponse;
 import be.sfpd.rest.service.ArticleService;
 import be.sfpd.rest.service.IllegalIdException;
 
@@ -48,7 +48,7 @@ public class ArticleResource {
 		List<Article> filteredArticles = articleStream.collect(Collectors.toList());
 
 		return Response
-				.ok(new ArticleListResponse(filteredArticles))
+				.ok(new ItemListResponse<>(filteredArticles))
 				.build();
 	}
 
@@ -56,7 +56,7 @@ public class ArticleResource {
     @Path("/{id}")
     public Response getArticleById(@PathParam("id") Long articleId) {
         return service.getArticleById(articleId)
-				.map(ArticleResponse::new)
+				.map(ItemResponse::new)
 				.map(Response::ok)
 				.orElse(Response.noContent())
 				.build();
@@ -66,7 +66,7 @@ public class ArticleResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addArticle(ArticleRequest articleRequest){
 		Article article = service.addArticle(articleRequest);
-		return Response.ok(new ArticleResponse(article)).build();
+		return Response.ok(new ItemResponse(article)).build();
 	}
 
 	@PUT
@@ -77,7 +77,7 @@ public class ArticleResource {
 		article.setBody(articleRequest.getBody());
 		article = service.updateArticle(article);
 		return Response
-				.ok(new ArticleResponse(article))
+				.ok(new ItemResponse(article))
 				.build();
 	}
 
@@ -86,7 +86,7 @@ public class ArticleResource {
 	public Response deleteArticle(@PathParam("id")long id){
 
 		Article article = service.removeArticle(id);
-		return Response.ok(new ArticleResponse(article)).build();
+		return Response.ok(new ItemResponse(article)).build();
 	}
 
 

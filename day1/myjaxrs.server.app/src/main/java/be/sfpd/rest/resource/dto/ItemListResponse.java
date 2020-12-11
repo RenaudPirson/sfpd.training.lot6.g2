@@ -3,15 +3,15 @@ package be.sfpd.rest.resource.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ListResponse<T> {
+public class ItemListResponse<T> {
 	private  List<T> items;
 
 	private  LocalDateTime timestamp = LocalDateTime.now();
 
-	public ListResponse() {
+	public ItemListResponse() {
 	}
 
-	public ListResponse(List<T> items) {
+	public ItemListResponse(List<T> items) {
 		this.items = items;
 	}
 

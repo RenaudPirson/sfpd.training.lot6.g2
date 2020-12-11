@@ -12,7 +12,7 @@ import org.testng.annotations.BeforeTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-public abstract class AbstractArticleTest {
+public abstract class SetDataForEndToEndTests {
 
 	@BeforeTest
 	public void setUp () {

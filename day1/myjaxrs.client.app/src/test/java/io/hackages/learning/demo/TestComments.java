@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-public class TestComments extends AbstractArticleTest{
+public class TestComments extends SetDataForEndToEndTests {
 
 	@Test
 	public void testGetArticleCommentById(){

@@ -6,10 +6,9 @@ import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-public class TestExceptions extends AbstractArticleTest{
+public class TestExceptions extends SetDataForEndToEndTests {
 
 	@Test
 	public void testGetArticle_NO_CONTENT(){
