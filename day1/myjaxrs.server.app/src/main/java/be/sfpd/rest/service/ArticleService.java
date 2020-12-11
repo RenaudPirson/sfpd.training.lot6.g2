@@ -51,7 +51,7 @@ public class ArticleService {
         return article;
     }
 
-    public Article removeArticle(Long id) {
+    public Article removeArticle(Long id) throws IllegalIdException {
     	if(getArticleById(id) == null){
     		throw new IllegalIdException(id);
 		}
@@ -80,9 +80,9 @@ public class ArticleService {
 
 	}
 
-	public Comment updateCommentOfArticle(Long articleId, Long commentId, Comment comment) {
+	public Comment updateCommentOfArticle(Long articleId, Long commentId, Comment comment) throws IllegalIdException {
 		Comment toUpdate = getCommentOfArticle(articleId, commentId)
-				.orElseThrow(() -> new IllegalIdException(commentId));
+				.orElseThrow(() -> new IllegalIdException(articleId, commentId));
 		toUpdate.setText(comment.getText());
 		return toUpdate;
 

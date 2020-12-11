@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 
 import be.sfpd.rest.model.Article;
 import be.sfpd.rest.service.ArticleService;
+import be.sfpd.rest.service.IllegalIdException;
 
 @Path("articles")
 @Produces(MediaType.APPLICATION_JSON)
@@ -68,8 +69,7 @@ public class ArticleResource {
 	@Path("/{id}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public String editArticle(@PathParam("id")long id, Article newArticle){
-		Article article = service.getArticleById(id)
-				.orElseThrow(() ->new IllegalArgumentException("Article with id " + id + " does not exist"));
+		Article article = service.getArticleById(id).orElseThrow(() -> new IllegalIdException(id));
 		article.setBody(newArticle.getBody());
 		service.updateArticle(article);
 		return "article modified";

@@ -11,7 +11,6 @@ import org.testng.annotations.BeforeTest;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 
 public abstract class AbstractArticleTest {
 
@@ -33,14 +32,14 @@ public abstract class AbstractArticleTest {
 
 	}
 
-	private void insertComments(Object[] comment){
+	void insertComments(Object[] comment){
 		given().contentType(ContentType.JSON)
 				.body(comment[1])
 				.when()
 				.post("/articles/"+ comment[0] + "/comments");
 	}
 
-	private void insertArticle(String article){
+	void insertArticle(String article){
 		given().contentType(ContentType.JSON)
 				.body(article)
 				.when()

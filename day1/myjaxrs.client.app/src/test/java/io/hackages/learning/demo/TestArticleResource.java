@@ -3,26 +3,14 @@ package io.hackages.learning.demo;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -98,6 +86,7 @@ public class TestArticleResource extends AbstractArticleTest{
 
 	@Test
 	public void testPut(){
+
 		Response put = given()
 				.accept(ContentType.JSON)
 				.and()

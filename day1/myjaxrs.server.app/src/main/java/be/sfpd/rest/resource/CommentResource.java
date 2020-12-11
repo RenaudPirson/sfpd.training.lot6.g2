@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import be.sfpd.rest.model.Article;
 import be.sfpd.rest.model.Comment;
 import be.sfpd.rest.service.ArticleService;
+import be.sfpd.rest.service.IllegalIdException;
 
 @Path("articles/{articleId}/comments")
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,7 +33,7 @@ public class CommentResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Comment addComment(@PathParam("articleId") Long articleId, Comment comment){
 		Article article = service.getArticleById(articleId)
-				.orElseThrow(() -> new IllegalArgumentException("Article " + articleId + " does not exist"));
+				.orElseThrow(() -> new IllegalIdException(articleId));
 		service.commentArticle(article, comment);
 		return comment;
 	}
@@ -48,7 +49,7 @@ public class CommentResource {
 
 	@PUT
 	@Path("/{commentId}")
-	public Response updateComment(@PathParam("articleId")Long articleId, @PathParam("commentId") Long commentId, Comment comment){
+	public Response updateComment(@PathParam("articleId")Long articleId, @PathParam("commentId") Long commentId, Comment comment) {
 		Comment updated = service.updateCommentOfArticle(articleId, commentId, comment);
 		return Response.ok(updated).build();
 	}
