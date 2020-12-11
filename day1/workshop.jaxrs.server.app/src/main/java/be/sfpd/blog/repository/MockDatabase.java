@@ -19,4 +19,9 @@ public class MockDatabase {
         return profiles;
     }
 
+    public static void resetDB() {
+        articles.clear();
+        profiles.clear();
+    }
+
 }
